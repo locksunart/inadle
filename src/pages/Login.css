@@ -1,0 +1,240 @@
+.login-container {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, var(--primary-peach) 0%, var(--secondary-yellow) 50%, var(--primary-pink) 100%);
+  position: relative;
+  overflow: hidden;
+}
+
+.login-wrapper {
+  background: white;
+  padding: 3rem;
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-lg);
+  width: 100%;
+  max-width: 400px;
+  position: relative;
+  z-index: 10;
+}
+
+.login-header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.login-title {
+  font-size: 2.5rem;
+  font-weight: 900;
+  font-family: 'Poor Story', sans-serif;
+  color: #FF69B4;
+  margin-bottom: 0.3rem;
+  text-shadow: 2px 2px 4px rgba(255, 182, 193, 0.3);
+  -webkit-text-stroke: 0.5px #FF69B4;
+}
+
+.login-subtitle {
+  color: #6B7280;
+  font-size: 0.9rem;
+  font-family: 'Noto Sans KR', sans-serif;
+  font-weight: 300;
+  letter-spacing: 0.3px;
+  margin-top: -0.2rem;
+}
+
+.login-form {
+  margin-bottom: 1.5rem;
+}
+
+.form-group {
+  margin-bottom: 1.5rem;
+}
+
+.form-label {
+  display: block;
+  margin-bottom: 0.5rem;
+  color: var(--gray-700);
+  font-weight: 500;
+  font-size: 0.875rem;
+}
+
+.form-input {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border: 2px solid var(--gray-200);
+  border-radius: var(--radius);
+  font-size: 1rem;
+  transition: var(--transition);
+  background: var(--gray-50);
+}
+
+.form-input:focus {
+  outline: none;
+  border-color: var(--primary-pink);
+  background: white;
+  box-shadow: 0 0 0 3px rgba(255, 182, 193, 0.1);
+}
+
+.error-message {
+  background: #FEE2E2;
+  color: #DC2626;
+  padding: 0.75rem;
+  border-radius: var(--radius);
+  font-size: 0.875rem;
+  margin-bottom: 1rem;
+}
+
+.submit-button {
+  width: 100%;
+  padding: 0.875rem;
+  background: linear-gradient(135deg, #FFB6C1 0%, #FFA07A 100%) !important;
+  color: white !important;
+  border: none;
+  border-radius: 25px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.submit-button:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.submit-button:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.login-footer {
+  text-align: center;
+  padding-top: 1rem;
+  border-top: 1px solid var(--gray-200);
+}
+
+.login-footer p {
+  color: var(--gray-600);
+  font-size: 0.875rem;
+}
+
+.link {
+  color: var(--primary-pink);
+  font-weight: 500;
+  text-decoration: none;
+  transition: var(--transition);
+}
+
+.link:hover {
+  color: var(--primary-orange);
+  text-decoration: underline;
+}
+
+.demo-info {
+  margin-top: 2rem;
+  padding: 1.5rem;
+  background: var(--secondary-cream);
+  border-radius: var(--radius);
+  text-align: center;
+}
+
+.demo-title {
+  font-weight: 600;
+  color: var(--gray-700);
+  margin-bottom: 1rem;
+  font-size: 0.875rem;
+}
+
+.demo-login-button {
+  background: linear-gradient(135deg, #8B5CF6 0%, #7C3AED 100%);
+  color: white;
+  border: none;
+  padding: 0.75rem 2rem;
+  border-radius: var(--radius-full);
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition);
+  margin-bottom: 0.75rem;
+  box-shadow: var(--shadow);
+}
+
+.demo-login-button:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+.demo-login-button:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.demo-note {
+  font-size: 0.75rem;
+  color: var(--gray-500);
+  margin: 0;
+}
+
+/* 장식 요소 */
+.login-decoration {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.bubble {
+  position: absolute;
+  font-size: 2rem;
+  animation: float 20s infinite ease-in-out;
+  opacity: 0.3;
+}
+
+.bubble-1 {
+  top: 10%;
+  left: 10%;
+  animation-delay: 0s;
+}
+
+.bubble-2 {
+  top: 20%;
+  right: 10%;
+  animation-delay: 5s;
+}
+
+.bubble-3 {
+  bottom: 30%;
+  left: 5%;
+  animation-delay: 10s;
+}
+
+.bubble-4 {
+  bottom: 10%;
+  right: 15%;
+  animation-delay: 15s;
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0) rotate(0deg);
+  }
+  33% {
+    transform: translateY(-20px) rotate(120deg);
+  }
+  66% {
+    transform: translateY(20px) rotate(240deg);
+  }
+}
+
+/* 모바일 반응형 */
+@media (max-width: 768px) {
+  .login-wrapper {
+    padding: 2rem;
+    margin: 1rem;
+  }
+  
+  .login-title {
+    font-size: 2rem;
+  }
+}

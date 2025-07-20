@@ -1,0 +1,17 @@
+{
+  "short_name": "아이나들",
+  "name": "아이나들 - 대전 육아 나들이",
+  "icons": [
+    {
+      "src": "favicon.ico",
+      "sizes": "64x64 32x32 24x24 16x16",
+      "type": "image/x-icon"
+    }
+  ],
+  "start_url": ".",
+  "display": "standalone",
+  "theme_color": "#FFB6C1",
+  "background_color": "#FFF8DC",
+  "description": "우리 아이와 함께하는 대전 나들이, 엄마들이 직접 알려드려요!",
+  "categories": ["kids", "family", "travel", "lifestyle"]
+}

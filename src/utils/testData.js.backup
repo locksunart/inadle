@@ -1,0 +1,54 @@
+// 개발용 테스트 데이터 생성 유틸리티
+
+export const createTestUser = async () => {
+  try {
+    // 테스트 계정 회원가입 로직
+    console.log('테스트 계정을 생성합니다...');
+    
+    // 이 함수는 개발 중에만 사용됩니다
+    // 실제 운영에서는 사용하지 마세요
+    
+    return {
+      email: 'test@inadle.com',
+      password: 'test123!',
+      profile: {
+        nickname: '테스트맘',
+        children: [
+          {
+            nickname: '첫째',
+            birthYear: 2020,
+            birthMonth: 3
+          },
+          {
+            nickname: '둘째',
+            birthYear: 2022,
+            birthMonth: 8
+          }
+        ]
+      }
+    };
+  } catch (error) {
+    console.error('테스트 계정 생성 오류:', error);
+    return null;
+  }
+};
+
+export const mockUserData = {
+  email: 'test@inadle.com',
+  profile: {
+    nickname: '테스트맘',
+    location: '서울시 강남구',
+    children: [
+      {
+        nickname: '첫째',
+        birthYear: 2020,
+        birthMonth: 3
+      },
+      {
+        nickname: '둘째', 
+        birthYear: 2022,
+        birthMonth: 8
+      }
+    ]
+  }
+};

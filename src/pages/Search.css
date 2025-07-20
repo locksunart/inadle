@@ -1,0 +1,291 @@
+/* Search.css - 새로운 검색 화면 스타일 */
+
+.search-container {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #FFE4E1 0%, #FFF0F5 100%);
+  padding-bottom: 80px;
+}
+
+/* 헤더 */
+.search-header {
+  display: flex;
+  align-items: center;
+  padding: 20px;
+  background: white;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.back-button {
+  background: none;
+  border: none;
+  font-size: 18px;
+  color: #666;
+  margin-right: 15px;
+  cursor: pointer;
+}
+
+.search-header h1 {
+  font-size: 20px;
+  font-weight: 600;
+  color: #333;
+  margin: 0;
+}
+
+/* 검색 모드 탭 */
+.search-mode-tabs {
+  display: flex;
+  padding: 20px;
+  gap: 10px;
+}
+
+.mode-tab {
+  flex: 1;
+  padding: 15px;
+  border: none;
+  border-radius: 15px;
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.mode-tab:not(.active) {
+  background: white;
+  color: #666;
+  border: 2px solid #E5E5E5;
+}
+
+.mode-tab.active {
+  background: linear-gradient(135deg, #FF6B9D, #FFB5C7);
+  color: white;
+  box-shadow: 0 4px 15px rgba(255, 107, 157, 0.3);
+}
+
+/* AI 검색 섹션 */
+.ai-search-section {
+  padding: 0 20px 20px;
+}
+
+.search-input-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.search-input-container input {
+  width: 100%;
+  padding: 15px 50px 15px 20px;
+  border: none;
+  border-radius: 15px;
+  font-size: 16px;
+  background: white;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.search-button {
+  position: absolute;
+  right: 10px;
+  background: linear-gradient(135deg, #FF6B9D, #FFB5C7);
+  border: none;
+  border-radius: 10px;
+  width: 40px;
+  height: 40px;
+  color: white;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* 필터 검색 섹션 */
+.filter-search-section {
+  padding: 0 20px;
+}
+
+.filter-group {
+  margin-bottom: 30px;
+}
+
+.filter-group h3 {
+  font-size: 18px;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 15px;
+}
+
+.filter-options {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.filter-option {
+  padding: 15px 20px;
+  border: 2px solid #E5E5E5;
+  border-radius: 15px;
+  background: white;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  min-width: 100px;
+  justify-content: center;
+}
+
+.filter-option:hover {
+  border-color: #FFB5C7;
+  transform: translateY(-2px);
+}
+
+.filter-option.selected {
+  background: linear-gradient(135deg, #FF6B9D, #FFB5C7);
+  border-color: #FF6B9D;
+  color: white;
+  box-shadow: 0 4px 15px rgba(255, 107, 157, 0.3);
+}
+
+.option-emoji {
+  font-size: 18px;
+}
+
+.option-label {
+  font-weight: 500;
+}
+
+/* 필터 초기화 버튼 */
+.reset-filters-btn {
+  width: 100%;
+  padding: 15px;
+  background: #F5F5F5;
+  border: none;
+  border-radius: 15px;
+  color: #666;
+  font-size: 16px;
+  cursor: pointer;
+  margin-top: 20px;
+  transition: all 0.3s ease;
+}
+
+.reset-filters-btn:hover {
+  background: #E5E5E5;
+}
+
+/* 검색 결과 */
+.search-results {
+  padding: 20px;
+}
+
+.results-header {
+  margin-bottom: 20px;
+}
+
+.results-header h3 {
+  font-size: 18px;
+  font-weight: 600;
+  color: #333;
+  margin: 0;
+}
+
+.results-grid {
+  display: grid;
+  gap: 15px;
+}
+
+/* 로딩 상태 */
+.loading-state {
+  text-align: center;
+  padding: 40px 20px;
+}
+
+.loading-spinner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+}
+
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid #F3F3F3;
+  border-top: 3px solid #FF6B9D;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* 빈 결과 */
+.empty-results {
+  text-align: center;
+  padding: 40px 20px;
+  color: #666;
+}
+
+.empty-results p {
+  margin: 10px 0;
+  font-size: 16px;
+}
+
+/* 필터 안내 */
+.filter-prompt {
+  text-align: center;
+  padding: 40px 20px;
+  background: white;
+  border-radius: 20px;
+  margin: 20px 0;
+}
+
+.filter-prompt h3 {
+  color: #FF6B9D;
+  margin-bottom: 10px;
+  font-size: 20px;
+}
+
+.filter-prompt p {
+  color: #666;
+  font-size: 16px;
+  margin: 0;
+}
+
+/* 반응형 디자인 */
+@media (min-width: 768px) {
+  .filter-options {
+    gap: 15px;
+  }
+  
+  .filter-option {
+    min-width: 120px;
+    padding: 18px 25px;
+  }
+  
+  .search-mode-tabs {
+    max-width: 400px;
+    margin: 0 auto;
+  }
+  
+  .ai-search-section {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 0 20px 20px;
+  }
+  
+  .filter-search-section {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 0 20px;
+  }
+}
