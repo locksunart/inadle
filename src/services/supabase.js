@@ -104,15 +104,19 @@ export const dbHelpers = {
         .from('events')
         .select(`
           *,
-          places!inner(name, address, lat, lng)
+          places(name, address, lat, lng),
+          external_data_sources(source_name, source_type)
         `)
         .eq('is_active', true)
         .gte('end_date', today)
         .lte('start_date', today)
         .order('start_date');
       
-      if (error) throw error;
-      return data;
+      if (error) {
+        console.error('getActive 오류:', error);
+        throw error;
+      }
+      return data || [];
     },
 
     // 예정된 행사
@@ -122,15 +126,19 @@ export const dbHelpers = {
         .from('events')
         .select(`
           *,
-          places!inner(name, address, lat, lng)
+          places(name, address, lat, lng),
+          external_data_sources(source_name, source_type)
         `)
         .eq('is_active', true)
         .gt('start_date', today)
         .order('start_date')
         .limit(10);
       
-      if (error) throw error;
-      return data;
+      if (error) {
+        console.error('getUpcoming 오류:', error);
+        throw error;
+      }
+      return data || [];
     }
   },
 
