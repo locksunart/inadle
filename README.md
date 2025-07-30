@@ -152,4 +152,4 @@ inadle-app/
 이 프로젝트는 MIT 라이선스를 따릅니다.
 
 ---
-Made with ❤️ by 대전 엄마들
+Made with ❤️ by 대전 엄마들# 환경변수 설정 완료 Thu Jul 31 01:26:52 JST 2025

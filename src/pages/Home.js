@@ -39,14 +39,35 @@ function Home() {
     const loadPlaces = async () => {
       try {
         setLoading(true);
+        // 환경변수 재설정 후 테스트 - $(date)
+        console.log('🔧 DEBUG: 환경변수 체크');
+        console.log('SUPABASE_URL:', process.env.REACT_APP_SUPABASE_URL);
+        console.log('SUPABASE_KEY:', process.env.REACT_APP_SUPABASE_ANON_KEY?.substring(0, 20) + '...');
         console.log('📊 장소 데이터 로딩 시작...');
         
-        // 임시: 조건 없이 모든 places 가져오기
+        // 단순한 쿼리로 테스트
+        console.log('🧪 단순 places 쿼리 테스트...');
+        const { data: simplePlaces, error: simpleError } = await supabase
+          .from('places')
+          .select('id, name, category')
+          .limit(5);
+        
+        console.log('Simple places:', simplePlaces);
+        
+        console.log('🧪 place_details 쿼리 테스트...');
+        const { data: simpleDetails, error: detailError } = await supabase
+          .from('place_details')
+          .select('id, place_id')
+          .limit(5);
+        
+        console.log('Simple details:', simpleDetails);
+        
+        // place_details가 있는 장소만 가져오기
         const { data, error } = await supabase
           .from('places')
           .select(`
             *,
-            place_details(*),
+            place_details!inner(*),
             place_amenities(*),
             place_tips(*)
           `)
