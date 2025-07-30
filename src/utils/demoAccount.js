@@ -37,12 +37,16 @@ export const createDemoAccount = async () => {
       // (실제로는 Supabase 대시보드에서 설정해야 함)
       
       if (signUpData?.user) {
-        // 데모 계정은 기본 프로필만 생성 (아이 정보 없이)
+        // 데모 계정은 닉네임만 고정하고 나머지는 비워두어 사용자가 입력하도록 함
         const { error: profileError } = await supabase
           .from('user_profiles')
           .insert({
-            user_id: signUpData.user.id
-            // child_name, child_birth_date 필드는 비워두어 모달 표시
+            user_id: signUpData.user.id,
+            nickname: '데모 사용자',
+            child_name: null,
+            child_birth_date: null,
+            children: null
+            // 아이 정보는 비워두어 프로필 설정 모달이 뜨도록 함
           });
 
         if (profileError) {

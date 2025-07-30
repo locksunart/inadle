@@ -39,7 +39,13 @@ function Home() {
     const loadPlaces = async () => {
       try {
         setLoading(true);
+        console.log('📊 장소 데이터 로딩 시작...');
         const data = await dbHelpers.places.getAll();
+        console.log('✅ 장소 데이터 로딩 완료:', data?.length || 0, '개');
+        
+        if (data && data.length > 0) {
+          console.log('📋 첫 번째 장소 샘플:', data[0]);
+        }
         
         // 추천 점수 계산
         const placesWithScore = data.map(place => {
@@ -203,7 +209,7 @@ function Home() {
       });
     }
     
-    // 6. 부모 에너지 필터 - 더 세밀한 기준 적용
+    // 6. 부모 에너지 필터 활성화
     if (selectedEnergy) {
       filtered = filtered.filter(place => {
         const energyMap = {
@@ -214,18 +220,20 @@ function Home() {
         const energyField = energyMap[selectedEnergy];
         const energyScore = place.place_details?.[energyField] || 0;
         
-        // 부모 에너지에 따른 더 차별화된 임계값 적용
+        // 부모 에너지에 따른 임계값 적용
         if (selectedEnergy === '높음') {
-          return energyScore >= 1; // 거의 모든 장소 가능 (체력 충만)
+          return energyScore >= 2; // 2점 이상 (체력 좋을 때는 웬만한 곳 다 가능)
         } else if (selectedEnergy === '보통') {
-          return energyScore >= 2.5; // 적당히 편한 곳만 (보통 체력)
+          return energyScore >= 3; // 3점 이상 (적당히 편한 곳)
         } else { // '낮음'
-          return energyScore >= 4; // 정말 편한 곳만 (피곤함/임신/몸살)
+          return energyScore >= 4; // 4점 이상 (정말 편한 곳만)
         }
       });
     }
     
-    // 7. 아이 컨디션 필터
+    console.log('🔍 부모 에너지 필터 후:', filtered.length, '개 남음');
+    
+    // 7. 아이 컨디션 필터 활성화
     if (selectedCondition) {
       filtered = filtered.filter(place => {
         const conditionMap = {
@@ -233,9 +241,12 @@ function Home() {
           '저조함': 'child_condition_tired'
         };
         const conditionField = conditionMap[selectedCondition];
-        return place.place_details?.[conditionField] >= 4; // 4점 이상만
+        const conditionScore = place.place_details?.[conditionField] || 0;
+        return conditionScore >= 4; // 4점 이상만
       });
     }
+    
+    console.log('🔍 아이 컨디션 필터 후:', filtered.length, '개 남음');
     
     // 각 장소에 대해 예상 평점 계산 (5점 만점)
     filtered = filtered.map(place => {
@@ -348,6 +359,16 @@ function Home() {
       default:
         break;
     }
+    
+    // 디버깅: 필터링 결과 로그
+    console.log('🔍 필터링 디버깅:', {
+      originalCount: places.length,
+      filteredCount: filtered.length,
+      selectedEnergy,
+      selectedCondition,
+      sortBy,
+      filters
+    });
     
     return filtered; // 모든 장소 표시
   }, [places, selectedEnergy, selectedCondition, sortBy, userProfile, searchResults, filters]);

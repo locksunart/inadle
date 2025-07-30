@@ -10,6 +10,8 @@ import Login from './pages/Login';
 import Signup from './pages/Signup';
 import MobileNav from './components/MobileNav';
 import ChildInfoModal from './components/ChildInfoModal';
+import PlaceGenerator from './components/PlaceGenerator';
+import DatabaseDebugger from './DatabaseDebugger';
 import './App.css';
 
 // 보호된 라우트 컴포넌트
@@ -114,6 +116,26 @@ function AppContent() {
           element={
             <ProtectedRoute>
               <Profile />
+            </ProtectedRoute>
+          }
+        />
+        
+        {/* 관리자 전용: 장소 생성기 */}
+        <Route
+          path="/admin/place-generator"
+          element={
+            <ProtectedRoute>
+              <PlaceGenerator />
+            </ProtectedRoute>
+          }
+        />
+        
+        {/* 디버깅 전용: 데이터베이스 상태 확인 */}
+        <Route
+          path="/debug/database"
+          element={
+            <ProtectedRoute>
+              <DatabaseDebugger />
             </ProtectedRoute>
           }
         />

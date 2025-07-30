@@ -13,7 +13,7 @@ export const supabase = createClient(supabaseUrl, supabaseAnonKey);
 export const dbHelpers = {
   // 장소 관련
   places: {
-    // 모든 장소 가져오기
+    // 모든 장소 가져오기 - 상세 정보가 있는 장소만
     async getAll() {
       const { data, error } = await supabase
         .from('places')
@@ -23,6 +23,7 @@ export const dbHelpers = {
           place_amenities(*),
           place_tips(*)
         `)
+        .not('place_details', 'is', null)  // place_details가 있는 장소만
         .order('created_at', { ascending: false });
       
       if (error) throw error;
@@ -332,6 +333,117 @@ export const dbHelpers = {
   }
 };
 
+// 데모 계정 헬퍼 함수
+export const demoHelpers = {
+  // 데모 계정 여부 확인
+  isDemoUser(email) {
+    const demoEmail = process.env.REACT_APP_DEMO_EMAIL || 'demo@inadle.app';
+    return email === demoEmail;
+  },
+
+  // 데모 계정 데이터 초기화
+  async clearDemoData(userId) {
+    try {
+      console.log('데모 계정 데이터 초기화 시작:', userId);
+      
+      // 1. 아이별 평가 삭제
+      const { error: ratingsError } = await supabase
+        .from('child_place_ratings')
+        .delete()
+        .eq('user_id', userId);
+      
+      if (ratingsError) {
+        console.error('아이별 평가 삭제 오류:', ratingsError);
+      }
+      
+      // 2. 방문 기록 삭제
+      const { error: visitsError } = await supabase
+        .from('user_visits')
+        .delete()
+        .eq('user_id', userId);
+      
+      if (visitsError) {
+        console.error('방문 기록 삭제 오류:', visitsError);
+      }
+      
+      // 3. 찜한 장소 삭제
+      const { error: savedError } = await supabase
+        .from('user_saved_places')
+        .delete()
+        .eq('user_id', userId);
+      
+      if (savedError) {
+        console.error('찜한 장소 삭제 오류:', savedError);
+      }
+      
+      // 4. 프로그램 관심사 삭제
+      const { error: interestsError } = await supabase
+        .from('user_program_interests')
+        .delete()
+        .eq('user_id', userId);
+      
+      if (interestsError) {
+        console.error('프로그램 관심사 삭제 오류:', interestsError);
+      }
+      
+      // 5. 검색 기록 삭제
+      const { error: searchError } = await supabase
+        .from('search_queries')
+        .delete()
+        .eq('user_id', userId);
+      
+      if (searchError) {
+        console.error('검색 기록 삭제 오류:', searchError);
+      }
+      
+      // 6. 검색 피드백 삭제
+      const { error: feedbackError } = await supabase
+        .from('search_feedback')
+        .delete()
+        .eq('user_id', userId);
+      
+      if (feedbackError) {
+        console.error('검색 피드백 삭제 오류:', feedbackError);
+      }
+      
+      // 7. 추천 점수 삭제
+      const { error: scoresError } = await supabase
+        .from('program_recommendation_scores')
+        .delete()
+        .eq('user_id', userId);
+      
+      if (scoresError) {
+        console.error('추천 점수 삭제 오류:', scoresError);
+      }
+      
+      // 8. 사용자 프로필을 기본 상태로 리셋 (닉네임만 고정)
+      const { error: profileError } = await supabase
+        .from('user_profiles')
+        .upsert({
+          user_id: userId,
+          nickname: '데모 사용자',
+          child_name: null,
+          child_birth_date: null,
+          children: null,
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString()
+        }, {
+          onConflict: 'user_id'
+        });
+      
+      if (profileError) {
+        console.error('사용자 프로필 리셋 오류:', profileError);
+      }
+      
+      console.log('데모 계정 데이터 초기화 완료');
+      return true;
+    } catch (error) {
+      console.error('데모 데이터 초기화 중 오류:', error);
+      throw error;
+    }
+  }
+};
+
 // 인증 헬퍼 함수
 export const authHelpers = {
   // 회원가입
@@ -356,10 +468,24 @@ export const authHelpers = {
     return data;
   },
 
-  // 로그아웃
-  async signOut() {
-    const { error } = await supabase.auth.signOut();
-    if (error) throw error;
+  // 로그아웃 (데모 계정 데이터 초기화 포함)
+  async signOut(user = null) {
+    try {
+      // 데모 계정인 경우 데이터 초기화
+      if (user && demoHelpers.isDemoUser(user.email)) {
+        console.log('데모 계정 로그아웃 - 데이터 초기화 진행');
+        await demoHelpers.clearDemoData(user.id);
+      }
+      
+      // 로그아웃 실행
+      const { error } = await supabase.auth.signOut();
+      if (error) throw error;
+      
+      console.log('로그아웃 완료');
+    } catch (error) {
+      console.error('로그아웃 중 오류:', error);
+      throw error;
+    }
   },
 
   // 현재 사용자

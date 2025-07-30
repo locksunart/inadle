@@ -44,6 +44,9 @@ function PlaceCard({ place, onClick, userProfile }) {
     const emojis = {
       '실내놀이터': '🏠',
       '박물관': '🏛️',
+      '미술관': '🎨',
+      '아쿠아리움': '🐠',
+      '테마파크': '🎢',
       '도서관': '📚',
       '공원': '🌳',
       '체험시설': '🎨',
@@ -60,15 +63,67 @@ function PlaceCard({ place, onClick, userProfile }) {
     return place.description || '아이와 함께 즐거운 시간을 보낼 수 있는 곳이에요!';
   };
 
-  // 활동 정보 생성
+  // 활동 정보 생성 - undefined 제거
   const getActivities = () => {
-    // 데이터베이스의 highlights 필드 사용
-    if (place.place_details?.highlights && Array.isArray(place.place_details.highlights)) {
-      return place.place_details.highlights.map(highlight => {
-        return `${highlight.name} - ${highlight.description}`;
-      });
+    // place_tips에서 주요 팁들을 가져와서 표시
+    if (place.place_tips && place.place_tips.length > 0) {
+      const validTips = place.place_tips
+        .filter(tip => tip.content && tip.content.trim() !== '' && 
+                      !tip.content.includes('undefined') && 
+                      tip.content !== 'undefined - undefined')
+        .slice(0, 3)
+        .map(tip => tip.content);
+      
+      if (validTips.length > 0) {
+        return validTips;
+      }
     }
-    return ['아이와 함께 즐거운 활동을 할 수 있어요'];
+    
+    // highlights가 있으면 사용
+    if (place.place_details?.highlights && Array.isArray(place.place_details.highlights)) {
+      const validHighlights = place.place_details.highlights
+        .filter(highlight => highlight.name && highlight.description && 
+                           !highlight.name.includes('undefined') && 
+                           !highlight.description.includes('undefined'))
+        .map(highlight => `${highlight.name} - ${highlight.description}`);
+      if (validHighlights.length > 0) {
+        return validHighlights;
+      }
+    }
+    
+    // 카테고리별 기본 메시지
+    const getDefaultMessages = (category) => {
+      const messageMap = {
+        '테마파크': [
+          '다양한 놀이기구와 어트랙션을 즐길 수 있어요',
+          '가족 단위 방문객들에게 인기가 많아요',
+          '하루 종일 즐길 거리가 풍성해요'
+        ],
+        '아쿠아리움': [
+          '다양한 바다 생물들을 관찰할 수 있어요',
+          '실내에서 편안하게 관람 가능해요',
+          '교육적 가치가 높은 체험을 제공해요'
+        ],
+        '미술관': [
+          '다양한 전시를 통해 예술적 감성을 기를 수 어요',
+          '조용하고 차분한 환경에서 관람할 수 있어요',
+          '어린이 대상 특별 프로그램이 있어요'
+        ],
+        '박물관': [
+          '교육적이고 흥미로운 전시물들이 많아요',
+          '아이들의 호기심을 자극하는 체험 활동이 있어요',
+          '역사와 문화를 배울 수 있는 좋은 기회예요'
+        ]
+      };
+      
+      return messageMap[category] || [
+        '아이와 함께 즐거운 시간을 보낼 수 있어요',
+        '가족 나들이에 적합한 장소입니다',
+        '다양한 체험 활동이 준비되어 있어요'
+      ];
+    };
+    
+    return getDefaultMessages(place.category);
   };
 
   // 사용자 자녀 기준 예상 평점 계산 - Home.js에서 전달받은 값 사용
@@ -81,6 +136,7 @@ function PlaceCard({ place, onClick, userProfile }) {
     // 기존 로직 유지 (후보 호환성)
     return parseFloat(calculateExpectedRating().toFixed(1));
   };
+
   const calculateExpectedRating = () => {
     if (!place.place_details) {
       // place_details가 없으면 기본값 사용
@@ -92,7 +148,7 @@ function PlaceCard({ place, onClick, userProfile }) {
       // 전체 연령대 평균으로 계산
       const allRatings = [
         place.place_details.age_0_12_months,
-        place.place_details.age_13_24_months,
+        place.place_details.age_12_24_months,
         place.place_details.age_24_48_months,
         place.place_details.age_over_48_months,
         place.place_details.age_elementary_low,
@@ -160,6 +216,7 @@ function PlaceCard({ place, onClick, userProfile }) {
 
   const expectedRating = getExpectedRating();
   const amenities = place.place_amenities;
+  const activities = getActivities();
 
   return (
     <div className="place-card" onClick={onClick}>
@@ -200,14 +257,16 @@ function PlaceCard({ place, onClick, userProfile }) {
         {getFriendlyDescription()}
       </div>
 
-      <div className="place-activities">
-        {getActivities().slice(0, 3).map((activity, index) => (
-          <div key={index} className="activity-item">
-            <span className="bullet">•</span>
-            <span>{activity}</span>
-          </div>
-        ))}
-      </div>
+      {activities && activities.length > 0 && (
+        <div className="place-activities">
+          {activities.slice(0, 3).map((activity, index) => (
+            <div key={index} className="activity-item">
+              <span className="bullet">•</span>
+              <span>{activity}</span>
+            </div>
+          ))}
+        </div>
+      )}
 
       <div className="place-amenities">
         {amenities?.parking_available && (
@@ -220,7 +279,7 @@ function PlaceCard({ place, onClick, userProfile }) {
             <FaBaby />
           </span>
         )}
-        {amenities?.cafe_inside && (
+        {amenities?.has_cafe && (
           <span className="amenity-icon" title="카페">
             <FaCoffee />
           </span>

@@ -140,9 +140,16 @@ export const AuthProvider = ({ children }) => {
   const signOut = async () => {
     try {
       setLoading(true);
-      await authHelpers.signOut();
+      
+      // 데모 계정 데이터 초기화를 위해 현재 사용자 정보를 전달
+      await authHelpers.signOut(user);
+      
       setUser(null);
       setUserProfile(null);
+      
+      // 아이 정보 모달 상태도 초기화
+      setHasSkippedChildInfo(false);
+      setNeedsChildInfo(false);
     } catch (error) {
       console.error('로그아웃 오류:', error);
       throw error;
