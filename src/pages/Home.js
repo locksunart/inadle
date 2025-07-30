@@ -2,7 +2,7 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FaMapMarkerAlt, FaSearch, FaStar, FaEye, FaFire } from 'react-icons/fa';
 import { useAuth } from '../hooks/useAuth';
-import { dbHelpers } from '../services/supabase';
+import { dbHelpers, supabase } from '../services/supabase';
 import { geminiSearchService } from '../services/geminiSearch';
 import { getAgeFromBirthDate, calculateMonths } from '../utils/ageCalculator';
 import PlaceCard from '../components/PlaceCard';
@@ -40,7 +40,24 @@ function Home() {
       try {
         setLoading(true);
         console.log('📊 장소 데이터 로딩 시작...');
-        const data = await dbHelpers.places.getAll();
+        
+        // 임시: 조건 없이 모든 places 가져오기
+        const { data, error } = await supabase
+          .from('places')
+          .select(`
+            *,
+            place_details(*),
+            place_amenities(*),
+            place_tips(*)
+          `)
+          .order('created_at', { ascending: false });
+        
+        if (error) {
+          console.error('Supabase 쿼리 오류:', error);
+          throw error;
+        }
+        
+        console.log('Raw data from Supabase:', data);
         console.log('✅ 장소 데이터 로딩 완료:', data?.length || 0, '개');
         
         if (data && data.length > 0) {
